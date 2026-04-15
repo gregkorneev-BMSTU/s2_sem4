@@ -95,21 +95,24 @@ void showAccountPolymorphically(const Account& account) {
     printAccountCard(account);
 }
 
-void inspectAccountRuntimeType(const Account& account) {
-    std::cout << "Проверка фактического типа: ";
+void useDerivedFeature(Account& account) {
+    std::cout << "Использование dynamic_cast: ";
 
-    if (dynamic_cast<const SavingsAccount*>(&account) != nullptr) {
-        std::cout << "обнаружен SavingsAccount, для него доступно начисление процентов.\n";
+    if (SavingsAccount* savings = dynamic_cast<SavingsAccount*>(&account)) {
+        savings->addMonthlyInterest();
+        std::cout << "для SavingsAccount вызван addMonthlyInterest().\n";
         return;
     }
 
-    if (dynamic_cast<const CreditAccount*>(&account) != nullptr) {
-        std::cout << "обнаружен CreditAccount, он поддерживает кредитный лимит.\n";
+    if (CreditAccount* credit = dynamic_cast<CreditAccount*>(&account)) {
+        std::cout << "для CreditAccount получен лимит через getCreditLimit(): "
+                  << formatMoney(credit->getCreditLimit()) << ".\n";
         return;
     }
 
-    if (dynamic_cast<const DepositAccount*>(&account) != nullptr) {
-        std::cout << "обнаружен DepositAccount, у него есть блокировка снятия.\n";
+    if (DepositAccount* deposit = dynamic_cast<DepositAccount*>(&account)) {
+        deposit->unlock();
+        std::cout << "для DepositAccount вызван unlock().\n";
         return;
     }
 
@@ -265,9 +268,11 @@ int main() {
     trainingAccounts.push_back(
         std::make_unique<DepositAccount>("ACC-4003", "Учебный клиент", 50000, 9));
 
-    for (const std::unique_ptr<Account>& account : trainingAccounts) {
+    for (std::unique_ptr<Account>& account : trainingAccounts) {
         showAccountPolymorphically(*account);
-        inspectAccountRuntimeType(*account);
+        useDerivedFeature(*account);
+        std::cout << "Состояние после специфичного действия:\n";
+        printAccountCard(*account);
         printLine('.');
     }
 

@@ -12,6 +12,7 @@ public:
     std::string getType() const override;
     std::string getDisplayType() const override;
     std::string getSpecialInfo() const override;
+    double getCreditLimit() const;
 
 protected:
     bool canWithdraw(double amount) const override;

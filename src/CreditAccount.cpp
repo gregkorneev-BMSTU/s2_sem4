@@ -24,6 +24,10 @@ std::string CreditAccount::getSpecialInfo() const {
     return out.str();
 }
 
+double CreditAccount::getCreditLimit() const {
+    return creditLimit_;
+}
+
 bool CreditAccount::canWithdraw(double amount) const {
     return amount >= 0 && (balance_ + creditLimit_) >= amount;
 }
