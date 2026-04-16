@@ -46,4 +46,4 @@
 ## Сборка и запуск
 ```bash
 cmake -B build && cmake --build build && ./build/project_bank
-```s
+```
